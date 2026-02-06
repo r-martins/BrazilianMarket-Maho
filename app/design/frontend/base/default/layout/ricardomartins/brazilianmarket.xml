@@ -10,10 +10,6 @@
                 <type>skin_js</type>
                 <name>js/ricardomartins/brazilianmarket/validation.js</name>
             </action>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/ricardomartins/brazilianmarket/labels.js</name>
-            </action>
         </reference>
     </checkout_onepage_index>
     <onestepcheckout_index_index>
@@ -25,10 +21,6 @@
             <action method="addItem">
                 <type>skin_js</type>
                 <name>js/ricardomartins/brazilianmarket/validation.js</name>
-            </action>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/ricardomartins/brazilianmarket/labels.js</name>
             </action>
         </reference>
     </onestepcheckout_index_index>
@@ -42,10 +34,6 @@
                 <type>skin_js</type>
                 <name>js/ricardomartins/brazilianmarket/validation.js</name>
             </action>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/ricardomartins/brazilianmarket/labels.js</name>
-            </action>
         </reference>
     </customer_account_create>
     <customer_account_edit>
@@ -58,10 +46,6 @@
                 <type>skin_js</type>
                 <name>js/ricardomartins/brazilianmarket/validation.js</name>
             </action>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/ricardomartins/brazilianmarket/labels.js</name>
-            </action>
         </reference>
     </customer_account_edit>
     <checkout_onepage_billing>
@@ -73,10 +57,6 @@
             <action method="addItem">
                 <type>skin_js</type>
                 <name>js/ricardomartins/brazilianmarket/validation.js</name>
-            </action>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/ricardomartins/brazilianmarket/labels.js</name>
             </action>
         </reference>
     </checkout_onepage_billing>

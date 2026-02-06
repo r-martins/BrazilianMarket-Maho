@@ -5,6 +5,8 @@
   "license": "OSL-3.0",
   "homepage": "https://github.com/r-martins/BrazilianMarket-Maho",
   "version": "1.0.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "support": {
     "docs": "https://github.com/r-martins/BrazilianMarket-Maho",
     "source": "https://github.com/r-martins/BrazilianMarket-Maho"
