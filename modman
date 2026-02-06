@@ -1,0 +1,5 @@
+app/code/community/RicardoMartins/BrazilianMarket/* app/code/community/RicardoMartins/BrazilianMarket/
+app/design/frontend/base/default/layout/ricardomartins/brazilianmarket.xml app/design/frontend/base/default/layout/ricardomartins/brazilianmarket.xml
+app/etc/modules/RicardoMartins_BrazilianMarket.xml app/etc/modules/RicardoMartins_BrazilianMarket.xml
+app/locale/pt_BR/RicardoMartins_BrazilianMarket.csv app/locale/pt_BR/RicardoMartins_BrazilianMarket.csv
+skin/frontend/base/default/js/ricardomartins/brazilianmarket/* skin/frontend/base/default/js/ricardomartins/brazilianmarket/
