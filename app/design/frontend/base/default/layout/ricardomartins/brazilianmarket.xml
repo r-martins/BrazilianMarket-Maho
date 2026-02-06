@@ -24,6 +24,18 @@
             </action>
         </reference>
     </onestepcheckout_index_index>
+    <customer_account_login>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/ricardomartins/brazilianmarket/masks.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/ricardomartins/brazilianmarket/validation.js</name>
+            </action>
+        </reference>
+    </customer_account_login>
     <customer_account_create>
         <reference name="head">
             <action method="addItem">
