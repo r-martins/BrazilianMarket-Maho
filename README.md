@@ -7,7 +7,11 @@ Módulo destinado a usuários do Maho Commerce 26.3 ou superior.
 3. Adiciona validação de CPF/CNPJ
 
 # Instalação
-composer require ricardomartins/brazilian-market-maho
+`composer require ricardomartins/brazilian-market-maho`
+
+# Screenshot
+<img width="1574" height="773" alt="image" src="https://github.com/user-attachments/assets/e2776a69-d10c-4e8a-8162-e7ba26e907f8" />
+
 
 # Configuração
 1. Em Clientes > Configurações do Cliente > Opções de nome e Endreço, marque a opção "Mostrar CPF/CNPJ" como Obrigatório, e Número de linhas de endereço como 2.
