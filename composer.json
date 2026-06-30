@@ -4,7 +4,7 @@
   "type": "magento-module",
   "license": "OSL-3.0",
   "homepage": "https://github.com/r-martins/BrazilianMarket-Maho",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "support": {
