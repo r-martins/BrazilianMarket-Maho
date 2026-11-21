@@ -1,6 +1,6 @@
 /**
  * BrazilianMarket - Máscaras para campos brasileiros
- * Aplica máscaras para telefone e CPF/CNPJ (incluindo CNPJ alfanumérico)
+ * Aplica máscaras para telefone, CPF/CNPJ (incluindo CNPJ alfanumérico) e CEP
  */
 (function() {
     'use strict';
@@ -143,6 +143,24 @@
         return position;
     }
 
+    function updateCpfCnpjLabel(input, cnpjMode) {
+        if (!input.id) {
+            return;
+        }
+        const label = document.querySelector('label[for="' + CSS.escape(input.id) + '"]');
+        if (!label) {
+            return;
+        }
+        if (!label.dataset.cpfLabel) {
+            label.dataset.cpfLabel = (label.textContent || 'CPF').trim() || 'CPF';
+        }
+        const next = cnpjMode ? 'CNPJ' : label.dataset.cpfLabel;
+        if (label.textContent !== next) {
+            label.textContent = next;
+        }
+        input.title = next;
+    }
+
     /**
      * Aplica máscara de CPF/CNPJ
      */
@@ -191,6 +209,7 @@
             const value = formatCpfCnpj(chars);
 
             target.value = value;
+            updateCpfCnpjLabel(target, cnpjMode);
 
             const newCharLength = chars.length;
             const oldCharLength = oldChars.length;
@@ -219,6 +238,151 @@
                 oldValue = target.value;
             }, 0);
         });
+
+        updateCpfCnpjLabel(input, isCnpjMode(sanitizeCpfCnpjInput(input.value)));
+    }
+
+    const POSTCODE_SELECTOR = 'input[name="billing[postcode]"], input[name="shipping[postcode]"], input[name="postcode"], input[name="estimate_postcode"]';
+
+    function formatCep(value) {
+        const digits = (value || '').replace(/\D/g, '').substring(0, 8);
+        if (digits.length <= 5) {
+            return digits;
+        }
+        return digits.substring(0, 5) + '-' + digits.substring(5);
+    }
+
+    function countryElementFor(input) {
+        const id = input.id || '';
+        const colon = id.indexOf(':');
+        if (colon > 0) {
+            return document.getElementById(id.slice(0, colon) + ':country_id');
+        }
+        return document.getElementById('country')
+            || document.getElementById('country_id')
+            || document.querySelector('select[name="country_id"]');
+    }
+
+    function shouldMaskCep(input) {
+        const country = countryElementFor(input);
+        return !country || country.value === 'BR';
+    }
+
+    function setFieldValue(element, value) {
+        if (!element || value == null || value === '') {
+            return;
+        }
+        element.value = value;
+        element.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function selectRegion(select, estado, uf) {
+        if (!select) {
+            return;
+        }
+        const name = (estado || '').trim().toLowerCase();
+        const code = (uf || '').trim().toLowerCase();
+        let matched = null;
+        for (const option of select.options) {
+            const text = option.text.trim().toLowerCase();
+            if ((name && text === name) || (code && text === code)) {
+                matched = option;
+                break;
+            }
+        }
+        if (!matched) {
+            return;
+        }
+        select.value = matched.value;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function fillAddressFromViaCep(input, data) {
+        const prefix = (input.id || '').split(':')[0];
+        if (!prefix) {
+            return;
+        }
+        const field = function(name) {
+            return document.getElementById(prefix + ':' + name);
+        };
+
+        setFieldValue(field('street1'), data.logradouro);
+        setFieldValue(field('street2'), [data.bairro, data.complemento].filter(Boolean).join(' - '));
+        setFieldValue(field('city'), data.localidade);
+        selectRegion(field('region_id'), data.estado, data.uf);
+        setFieldValue(field('region'), data.estado);
+    }
+
+    function lookupCep(input) {
+        if (!shouldMaskCep(input)) {
+            return;
+        }
+        const digits = (input.value || '').replace(/\D/g, '');
+        if (digits.length !== 8) {
+            return;
+        }
+        if (input.dataset.cepLookup === digits) {
+            return;
+        }
+        input.dataset.cepLookup = digits;
+
+        fetch('https://viacep.com.br/ws/' + digits + '/json/')
+            .then(function(response) {
+                return response.ok ? response.json() : null;
+            })
+            .then(function(data) {
+                if ((input.value || '').replace(/\D/g, '') !== digits) {
+                    return;
+                }
+                if (!data || data.erro) {
+                    delete input.dataset.cepLookup;
+                    return;
+                }
+                fillAddressFromViaCep(input, data);
+            })
+            .catch(function() {
+                if (input.dataset.cepLookup === digits) {
+                    delete input.dataset.cepLookup;
+                }
+            });
+    }
+
+    /**
+     * Aplica máscara de CEP brasileiro (00000-000) quando o país é Brasil.
+     */
+    function applyCepMask(input) {
+        if (!input) return;
+
+        const refresh = function() {
+            if (!shouldMaskCep(input)) {
+                return;
+            }
+            const formatted = formatCep(input.value);
+            if (input.value !== formatted) {
+                input.value = formatted;
+            }
+        };
+
+        input.addEventListener('input', function() {
+            refresh();
+            lookupCep(input);
+        });
+
+        const country = countryElementFor(input);
+        if (country && !country.dataset.cepMaskBound) {
+            country.addEventListener('change', function() {
+                document.querySelectorAll('input[data-cep-mask="true"]').forEach(function(field) {
+                    if (countryElementFor(field) !== country || !shouldMaskCep(field)) {
+                        return;
+                    }
+                    field.value = formatCep(field.value);
+                });
+            });
+            country.dataset.cepMaskBound = 'true';
+        }
+
+        input.dataset.cepMask = 'true';
+        refresh();
     }
 
     /**
@@ -237,6 +401,13 @@
         taxvatInputs.forEach(function(input) {
             if (!input.dataset.maskApplied) {
                 applyCpfCnpjMask(input);
+                input.dataset.maskApplied = 'true';
+            }
+        });
+
+        document.querySelectorAll(POSTCODE_SELECTOR).forEach(function(input) {
+            if (!input.dataset.maskApplied) {
+                applyCepMask(input);
                 input.dataset.maskApplied = 'true';
             }
         });
@@ -261,6 +432,16 @@
                                 newTaxvatInputs.forEach(function(input) {
                                     if (!input.dataset.maskApplied) {
                                         applyCpfCnpjMask(input);
+                                        input.dataset.maskApplied = 'true';
+                                    }
+                                });
+                            }
+
+                            const newPostcodeInputs = node.querySelectorAll && node.querySelectorAll(POSTCODE_SELECTOR);
+                            if (newPostcodeInputs) {
+                                newPostcodeInputs.forEach(function(input) {
+                                    if (!input.dataset.maskApplied) {
+                                        applyCepMask(input);
                                         input.dataset.maskApplied = 'true';
                                     }
                                 });

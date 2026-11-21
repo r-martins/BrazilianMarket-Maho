@@ -31,9 +31,9 @@
                 <li class="fields"><?= $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress()->getFirstname() ? $this->getAddress() : $this->getQuote()->getCustomer())->setForceUseCustomerRequiredAttributes(!$this->isCustomerLoggedIn())->setFieldIdFormat('billing:%s')->setFieldNameFormat('billing[%s]')->toHtml() ?></li>
                 <li class="fields">
                     <div class="field">
-                        <label for="billing:company"><?= $this->__('Company') ?></label>
+                        <label for="billing:postcode" class="required"><?= $this->__('Zip/Postal Code') ?></label>
                         <div class="input-box">
-                            <input type="text" id="billing:company" name="billing[company]" value="<?= $this->escapeHtml($this->getAddress()->getCompany()) ?>" title="<?= $this->quoteEscape($this->__('Company')) ?>" class="input-text <?= $this->helper('customer/address')->getAttributeValidationClass('company') ?>" />
+                            <input type="text" title="<?= $this->quoteEscape($this->__('Zip/Postal Code')) ?>" name="billing[postcode]" id="billing:postcode" value="<?= $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international <?= $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" inputmode="numeric" autocomplete="postal-code" />
                         </div>
                     </div>
         <?php if(!$this->isCustomerLoggedIn()): ?>
@@ -90,12 +90,6 @@
                     </div>
                 </li>
                 <li class="fields">
-                    <div class="field">
-                        <label for="billing:postcode" class="required"><?= $this->__('Zip/Postal Code') ?></label>
-                        <div class="input-box">
-                            <input type="text" title="<?= $this->quoteEscape($this->__('Zip/Postal Code')) ?>" name="billing[postcode]" id="billing:postcode" value="<?= $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international <?= $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" />
-                        </div>
-                    </div>
                     <div class="field">
                         <label for="billing:country_id" class="required"><?= $this->__('Country') ?></label>
                         <div class="input-box">

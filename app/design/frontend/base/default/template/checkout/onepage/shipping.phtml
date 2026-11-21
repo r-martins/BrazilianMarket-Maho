@@ -29,10 +29,10 @@
                 <ul>
                     <li class="fields"><?= $this->getLayout()->createBlock('customer/widget_name')->setObject($this->getAddress())->setFieldIdFormat('shipping:%s')->setFieldNameFormat('shipping[%s]')->setFieldParams('onchange="shipping.setSameAsBilling(false)"')->toHtml() ?></li>
                     <li class="fields">
-                        <div class="fields">
-                            <label for="shipping:company"><?= $this->__('Company') ?></label>
+                        <div class="field">
+                            <label for="shipping:postcode" class="required"><?= $this->__('Zip/Postal Code') ?></label>
                             <div class="input-box">
-                                <input type="text" id="shipping:company" name="shipping[company]" value="<?= $this->escapeHtml($this->getAddress()->getCompany()) ?>" title="<?= $this->quoteEscape($this->__('Company')) ?>" class="input-text <?= $this->helper('customer/address')->getAttributeValidationClass('company') ?>" onchange="shipping.setSameAsBilling(false);" />
+                                <input type="text" title="<?= $this->quoteEscape($this->__('Zip/Postal Code')) ?>" name="shipping[postcode]" id="shipping:postcode" value="<?= $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international <?= $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" inputmode="numeric" autocomplete="postal-code" onchange="shipping.setSameAsBilling(false);" />
                             </div>
                         </div>
                     </li>
@@ -81,12 +81,6 @@
                         </div>
                     </li>
                     <li class="fields">
-                        <div class="field">
-                            <label for="shipping:postcode" class="required"><?= $this->__('Zip/Postal Code') ?></label>
-                            <div class="input-box">
-                                <input type="text" title="<?= $this->quoteEscape($this->__('Zip/Postal Code')) ?>" name="shipping[postcode]" id="shipping:postcode" value="<?= $this->escapeHtml($this->getAddress()->getPostcode()) ?>" class="input-text validate-zip-international <?= $this->helper('customer/address')->getAttributeValidationClass('postcode') ?>" onchange="shipping.setSameAsBilling(false);" />
-                            </div>
-                        </div>
                         <div class="field">
                             <label for="shipping:country_id" class="required"><?= $this->__('Country') ?></label>
                             <div class="input-box">
